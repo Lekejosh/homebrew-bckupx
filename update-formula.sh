@@ -1,61 +1,46 @@
 #!/usr/bin/env bash
-# Recomputes the sha256s in Formula/bckupx-agent.rb against a just-published
-# GitHub release's assets and bumps the version line. Run from the repo root
-# after release.yml has finished uploading assets for the tag, e.g.:
+# Points Formula/bckupx-agent.rb at an agent release: sets `version` and the
+# four sha256s from that release's manifest at agents.bckupx.com (the same
+# checksums the installers and the self-updater verify against).
 #
-#   ./update-formula.sh 0.1.1
+#   ./update-formula.sh 0.1.42
 #
-# Then commit and push - see README.md.
+# The agent's release workflow runs this and pushes the result on every
+# stable tag; by hand, commit and push afterwards.
 set -euo pipefail
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-FORMULA="$SCRIPT_DIR/Formula/bckupx-agent.rb"
-REPO="Lekejosh/backupx-agent"
-
-VERSION="${1:?usage: $(basename "$0") <version, e.g. 0.1.1>}"
+FORMULA="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/Formula/bckupx-agent.rb"
+BASE="${RELEASES_BASE:-https://agents.bckupx.com}"
+VERSION="${1:?usage: $(basename "$0") <version, e.g. 0.1.42>}"
 VERSION="${VERSION#v}"
 
-TMP_DIR="$(mktemp -d)"
-trap 'rm -rf "$TMP_DIR"' EXIT
-
-declare -A ASSETS=(
-  [mac-arm]="bckupx-agent-macos-aarch64.tar.gz"
-  [mac-intel]="bckupx-agent-macos-x86_64.tar.gz"
-  [linux-arm]="bckupx-agent-linux-aarch64.tar.gz"
-  [linux-intel]="bckupx-agent-linux-x86_64.tar.gz"
-)
-
-declare -A SHAS
-
-for key in "${!ASSETS[@]}"; do
-  asset="${ASSETS[$key]}"
-  url="https://github.com/${REPO}/releases/download/v${VERSION}/${asset}"
-  echo "==> Downloading $url"
-  curl -fsSL -o "$TMP_DIR/$asset" "$url"
-  SHAS[$key]="$(shasum -a 256 "$TMP_DIR/$asset" | awk '{print $1}')"
-  echo "    sha256: ${SHAS[$key]}"
+manifest="$(curl -fsSL "$BASE/$VERSION/manifest.json")"
+# Same order as the sha256 lines in the formula: mac-arm, mac-intel,
+# linux-arm, linux (x86_64 glibc).
+SHAS=()
+for id in mac-arm mac-intel linux-arm linux; do
+  sha="$(printf '%s' "$manifest" | jq -er --arg id "$id" '.artifacts[$id].sha256')"
+  file="$(printf '%s' "$manifest" | jq -er --arg id "$id" '.artifacts[$id].file')"
+  # The formula builds the URL from the version; make sure it's the one the
+  # manifest names, and that it's there.
+  if [ "$id" = linux ]; then expected="agent-linux-v$VERSION"; else expected="agent-$id-v$VERSION"; fi
+  [ "$file" = "$expected" ] || {
+    echo "error: $id is $file in the manifest, not what the formula expects" >&2
+    exit 1
+  }
+  curl -fsSIL -o /dev/null "$BASE/$VERSION/$file"
+  echo "$id: $sha"
+  SHAS+=("$sha")
 done
 
-sed -i.bak \
-  -e "s/^  version \".*\"/  version \"${VERSION}\"/" \
-  "$FORMULA"
-
-# Each on_arm/on_intel block has its own sha256 line, in the same order as
-# ASSETS is iterated in the formula file itself (mac-arm, mac-intel,
-# linux-arm, linux-intel) - replace them positionally with awk rather than
-# matching on the placeholder text, since after the first run they're real
-# hashes, not REPLACE_WITH_SHA256, and would no longer be a stable anchor.
-awk -v arm_mac="${SHAS[mac-arm]}" -v intel_mac="${SHAS[mac-intel]}" \
-    -v arm_linux="${SHAS[linux-arm]}" -v intel_linux="${SHAS[linux-intel]}" '
+sed -e "s/^  version \".*\"/  version \"${VERSION}\"/" "$FORMULA" > "$FORMULA.bak"
+awk -v s1="${SHAS[0]}" -v s2="${SHAS[1]}" -v s3="${SHAS[2]}" -v s4="${SHAS[3]}" '
   /sha256 "/ {
     n++
-    if (n == 1) sub(/sha256 ".*"/, "sha256 \"" arm_mac "\"")
-    else if (n == 2) sub(/sha256 ".*"/, "sha256 \"" intel_mac "\"")
-    else if (n == 3) sub(/sha256 ".*"/, "sha256 \"" arm_linux "\"")
-    else if (n == 4) sub(/sha256 ".*"/, "sha256 \"" intel_linux "\"")
+    s = (n == 1) ? s1 : (n == 2) ? s2 : (n == 3) ? s3 : s4
+    sub(/sha256 "[^"]*"/, "sha256 \"" s "\"")
   }
   { print }
 ' "$FORMULA.bak" > "$FORMULA"
 rm -f "$FORMULA.bak"
-
-echo "==> Updated $FORMULA to version ${VERSION} with fresh sha256s"
+echo "==> Formula/bckupx-agent.rb now points at bckupx-agent ${VERSION}"
