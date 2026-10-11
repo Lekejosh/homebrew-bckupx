@@ -1,4 +1,4 @@
-# Homebrew formula for the bckupx agent.
+# Homebrew formula for the Concentric agent (formerly bckupx).
 #
 # The binaries are the same ones install.sh and the agent's self-updater use,
 # from https://agents.bckupx.com/<version>/; the sha256s below are those in
@@ -6,7 +6,7 @@
 # sha256s for a release - the agent's release workflow runs it on every
 # stable tag.
 class BckupxAgent < Formula
-  desc "Backup agent for bckupx: scheduled database backups with restore verification"
+  desc "Concentric backup agent: scheduled database backups with restore verification"
   homepage "https://bckupx.com"
   version "0.1.43"
   license :cannot_represent
