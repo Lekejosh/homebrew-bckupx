@@ -8,28 +8,28 @@
 class BckupxAgent < Formula
   desc "Concentric backup agent: scheduled database backups with restore verification"
   homepage "https://bckupx.com"
-  version "0.1.43"
+  version "0.1.44"
   license :cannot_represent
 
   on_macos do
     on_arm do
       url "https://agents.bckupx.com/#{version}/agent-mac-arm-v#{version}"
-      sha256 "68f294936484beef9456333774a664292d2cfb6c49936f45aa1d5796aebe38c2"
+      sha256 "33e73821738a7c9ab2166b56e4ef1c41e6ea4779aa5bba6d23200e9ece3357a9"
     end
     on_intel do
       url "https://agents.bckupx.com/#{version}/agent-mac-intel-v#{version}"
-      sha256 "1bb8980194b2f803d6e5e96834bb80d4f8322a6e3fe2dc664d2f231a23db079f"
+      sha256 "ad92123bf07d6adfb7575dece80ab4e8f7f046e9ed45e2ca4a02bec155f0efcc"
     end
   end
 
   on_linux do
     on_arm do
       url "https://agents.bckupx.com/#{version}/agent-linux-arm-v#{version}"
-      sha256 "1eb1c8fd7657ae5ffa182a7599291fc2bfac49648cea7ab06be26e4941c026f8"
+      sha256 "247c9330cec325facf35f5796c4e1ab51f9ba13dcbe160877c256e0fd4c25628"
     end
     on_intel do
       url "https://agents.bckupx.com/#{version}/agent-linux-v#{version}"
-      sha256 "c6338c7b7c3b22c10b861de9248a0f8157c9348eaafa7441726bb4a690f4ed72"
+      sha256 "bb503ff1bc5f4696498f9bed1de95854d657641fd05db561bb9f180eb56af97d"
     end
   end
 
