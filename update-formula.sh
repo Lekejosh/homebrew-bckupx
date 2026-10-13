@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Points Formula/bckupx-agent.rb at an agent release: sets `version` and the
+# Points Formula/orbiter.rb at an agent release: sets `version` and the
 # four sha256s from that release's manifest at get.concentric.sh (the same
 # checksums the installers and the self-updater verify against).
 #
@@ -9,7 +9,7 @@
 # stable tag; by hand, commit and push afterwards.
 set -euo pipefail
 
-FORMULA="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/Formula/bckupx-agent.rb"
+FORMULA="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/Formula/orbiter.rb"
 BASE="${RELEASES_BASE:-https://get.concentric.sh}"
 VERSION="${1:?usage: $(basename "$0") <version, e.g. 0.1.42>}"
 VERSION="${VERSION#v}"
@@ -43,4 +43,4 @@ awk -v s1="${SHAS[0]}" -v s2="${SHAS[1]}" -v s3="${SHAS[2]}" -v s4="${SHAS[3]}" 
   { print }
 ' "$FORMULA.bak" > "$FORMULA"
 rm -f "$FORMULA.bak"
-echo "==> Formula/bckupx-agent.rb now points at bckupx-agent ${VERSION}"
+echo "==> Formula/orbiter.rb now points at orbiter ${VERSION}"
