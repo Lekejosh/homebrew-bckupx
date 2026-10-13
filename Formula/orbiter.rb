@@ -113,8 +113,13 @@ class Orbiter < Formula
         orbiter recover --input <backup>.tar.gz.enc
     EOS
     # Moved from bckupx-agent: its service still runs under the old name,
-    # which `brew services` no longer knows.
-    if (var/"bckupx").symlink?
+    # which `brew services` no longer knows - shown until its file is gone.
+    old_service = if OS.mac?
+      Pathname("#{Dir.home}/Library/LaunchAgents/sh.brew.bckupx-agent.plist")
+    else
+      Pathname("#{Dir.home}/.config/systemd/user/sh.brew.bckupx-agent.service")
+    end
+    if old_service.exist?
       stop = if OS.mac?
         "launchctl bootout gui/$(id -u)/sh.brew.bckupx-agent\n  " \
           "rm ~/Library/LaunchAgents/sh.brew.bckupx-agent.plist"
