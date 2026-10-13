@@ -1,34 +1,34 @@
 # Homebrew formula for the Concentric agent (formerly bckupx).
 #
 # The binaries are the same ones install.sh and the agent's self-updater use,
-# from https://agents.bckupx.com/<version>/; the sha256s below are those in
+# from https://get.concentric.sh/<version>/; the sha256s below are those in
 # that release's manifest.json. update-formula.sh rewrites the version and
 # sha256s for a release - the agent's release workflow runs it on every
 # stable tag.
 class BckupxAgent < Formula
   desc "Concentric backup agent: scheduled database backups with restore verification"
-  homepage "https://bckupx.com"
+  homepage "https://concentric.sh"
   version "0.1.46"
   license :cannot_represent
 
   on_macos do
     on_arm do
-      url "https://agents.bckupx.com/#{version}/agent-mac-arm-v#{version}"
+      url "https://get.concentric.sh/#{version}/agent-mac-arm-v#{version}"
       sha256 "61fef145e17ea13218292a20269394d20429cf52a6dbfecaea9bee6cf063fec7"
     end
     on_intel do
-      url "https://agents.bckupx.com/#{version}/agent-mac-intel-v#{version}"
+      url "https://get.concentric.sh/#{version}/agent-mac-intel-v#{version}"
       sha256 "7991603d4ac66766a58140334fac0005688a565130e08920ad19eed026211d3e"
     end
   end
 
   on_linux do
     on_arm do
-      url "https://agents.bckupx.com/#{version}/agent-linux-arm-v#{version}"
+      url "https://get.concentric.sh/#{version}/agent-linux-arm-v#{version}"
       sha256 "2a32558957562dcd9b0cb1978a27bf874481aaf2175eb24977e2e556b5361fca"
     end
     on_intel do
-      url "https://agents.bckupx.com/#{version}/agent-linux-v#{version}"
+      url "https://get.concentric.sh/#{version}/agent-linux-v#{version}"
       sha256 "5aed764271a246cbb9e91fbf7db95a0203e0ba8e89d869647c2a88b89d25e5bf"
     end
   end

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Points Formula/bckupx-agent.rb at an agent release: sets `version` and the
-# four sha256s from that release's manifest at agents.bckupx.com (the same
+# four sha256s from that release's manifest at get.concentric.sh (the same
 # checksums the installers and the self-updater verify against).
 #
 #   ./update-formula.sh 0.1.42
@@ -10,7 +10,7 @@
 set -euo pipefail
 
 FORMULA="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/Formula/bckupx-agent.rb"
-BASE="${RELEASES_BASE:-https://agents.bckupx.com}"
+BASE="${RELEASES_BASE:-https://get.concentric.sh}"
 VERSION="${1:?usage: $(basename "$0") <version, e.g. 0.1.42>}"
 VERSION="${VERSION#v}"
 

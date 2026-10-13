@@ -1,9 +1,9 @@
-# homebrew-bckupx
+# homebrew-concentric
 
-Homebrew tap for the [bckupx](https://bckupx.com) backup agent.
+Homebrew tap for the [bckupx](https://concentric.sh) backup agent.
 
 ```
-brew install lekejosh/bckupx/bckupx-agent
+brew install lekejosh/concentric/bckupx-agent
 ```
 
 ## Running it as a service
@@ -25,7 +25,7 @@ decrypts any backup on any machine.
 ## Releases
 
 `Formula/bckupx-agent.rb` downloads the agent binaries from
-`agents.bckupx.com`, checked against each release's `manifest.json`. The
+`get.concentric.sh`, checked against each release's `manifest.json`. The
 agent's release workflow runs `./update-formula.sh <version>` and pushes the
 result on every stable release; to do it by hand:
 
