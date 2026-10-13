@@ -11,28 +11,28 @@
 class Orbiter < Formula
   desc "Concentric backup agent: scheduled database backups with restore verification"
   homepage "https://concentric.sh"
-  version "0.1.46"
+  version "0.1.47"
   license :cannot_represent
 
   on_macos do
     on_arm do
       url "https://get.concentric.sh/#{version}/agent-mac-arm-v#{version}"
-      sha256 "61fef145e17ea13218292a20269394d20429cf52a6dbfecaea9bee6cf063fec7"
+      sha256 "cf78565fd587a698b1141d059cef72c1d0bd21d4d891d9c0725bf2cca4a34612"
     end
     on_intel do
       url "https://get.concentric.sh/#{version}/agent-mac-intel-v#{version}"
-      sha256 "7991603d4ac66766a58140334fac0005688a565130e08920ad19eed026211d3e"
+      sha256 "1b6babed5d6f3a3e1eb48ae051bc46ff5dd646e012ff31be69b0021d87afb9cf"
     end
   end
 
   on_linux do
     on_arm do
       url "https://get.concentric.sh/#{version}/agent-linux-arm-v#{version}"
-      sha256 "2a32558957562dcd9b0cb1978a27bf874481aaf2175eb24977e2e556b5361fca"
+      sha256 "a463d40d538add80f2177f0b32675276a5be483d2223dfcd340b4ad295cd591f"
     end
     on_intel do
       url "https://get.concentric.sh/#{version}/agent-linux-v#{version}"
-      sha256 "5aed764271a246cbb9e91fbf7db95a0203e0ba8e89d869647c2a88b89d25e5bf"
+      sha256 "fd322ba115e407f48724b68b467abeb560171c2f6f2053d86361bc04467e4ec4"
     end
   end
 
